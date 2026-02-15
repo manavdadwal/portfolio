@@ -209,6 +209,9 @@ body {
   transition: opacity 0.6s var(--ease-out-expo);
   user-select: none;
   -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  outline: none;
 }
 
 .name-subtitle {
@@ -265,9 +268,22 @@ body {
   cursor: pointer;
   transition: text-shadow 0.4s ease, filter 0.4s ease;
   text-shadow: 0 0 0 transparent;
+  /* Gradient text on each letter */
+  background: linear-gradient(
+    135deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 30%,
+    var(--accent-primary) 60%,
+    var(--accent-secondary) 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 8s ease infinite;
 }
 
-/* Floating glow on each letter */
+/* Floating glow on each letter hover */
 .name-letter:hover {
   text-shadow:
     0 0 20px rgba(108, 99, 255, 0.6),
@@ -333,7 +349,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) translateZ(0);
   width: 90%;
   max-width: 1100px;
   display: grid;
@@ -343,6 +359,8 @@ body {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
+  -webkit-overflow-scrolling: touch;
+  will-change: transform;
 }
 
 .info-container.active {
@@ -373,6 +391,30 @@ body {
 
 .info-card--wide {
   grid-column: 1 / -1;
+}
+
+/* Shimmer accent line on top of cards */
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(108, 99, 255, 0.4) 30%,
+    rgba(0, 212, 255, 0.5) 50%,
+    rgba(108, 99, 255, 0.4) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.info-card:hover::before {
+  opacity: 1;
 }
 
 .info-card__glow {
@@ -413,6 +455,11 @@ body {
   border-radius: 8px;
   background: rgba(108, 99, 255, 0.1);
   border: 1px solid rgba(108, 99, 255, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.info-card:hover .info-card__icon {
+  box-shadow: 0 0 12px rgba(108, 99, 255, 0.3);
 }
 
 .info-card__title {
@@ -439,7 +486,7 @@ body {
 }
 
 .info-card__list li::before {
-  content: '›';
+  content: '\203A';
   position: absolute;
   left: 0;
   color: var(--accent-primary);
@@ -516,14 +563,49 @@ body {
   pointer-events: none;
   z-index: 50;
   will-change: transform, opacity;
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.6), 0 0 12px rgba(108, 99, 255, 0.3);
+}
+
+.particle--primary {
+  background: var(--accent-primary);
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.6), 0 0 12px rgba(108, 99, 255, 0.3);
 }
 
 .particle--cyan {
   background: var(--accent-secondary);
+  box-shadow: 0 0 6px rgba(0, 212, 255, 0.6), 0 0 12px rgba(0, 212, 255, 0.3);
 }
 
 .particle--white {
   background: var(--text-primary);
+  box-shadow: 0 0 6px rgba(240, 240, 245, 0.5), 0 0 12px rgba(240, 240, 245, 0.2);
+}
+
+/* Sparkle variant — smaller, longer-lived, drifts upward */
+.particle--sparkle {
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+/* ===================================================================
+   CENTRAL FLASH (spawned by JS on disintegration)
+   =================================================================== */
+.flash-ring {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 49;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(108, 99, 255, 0.3) 0%,
+    rgba(0, 212, 255, 0.15) 30%,
+    rgba(108, 99, 255, 0.05) 60%,
+    transparent 80%
+  );
+  will-change: transform, opacity;
 }
 
 /* ===================================================================
@@ -611,4 +693,11 @@ body {
 ::selection {
   background: rgba(108, 99, 255, 0.3);
   color: var(--text-primary);
+}
+
+/* --- Focus visible for accessibility --- */
+.name-container:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 8px;
+  border-radius: 8px;
 }
