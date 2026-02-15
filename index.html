@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Manav Dadwal — Full-Stack Developer & Creative Technologist. Portfolio showcasing experience, projects, and technical skills.">
+    <title>Manav Dadwal — Portfolio</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts: Space Grotesk, Inter, JetBrains Mono -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       BACKGROUND LAYERS
+       ══════════════════════════════════════════════════════════════ -->
+
+    <!-- Ambient Particle Canvas -->
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+    <!-- Grid Overlay -->
+    <div class="grid-overlay" aria-hidden="true"></div>
+
+    <!-- Floating Gradient Orbs -->
+    <div class="orb orb--1" aria-hidden="true"></div>
+    <div class="orb orb--2" aria-hidden="true"></div>
+    <div class="orb orb--3" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       TOP BAR
+       ══════════════════════════════════════════════════════════════ -->
+    <header class="topbar">
+        <div class="topbar__logo">MD.</div>
+        <div class="topbar__status">
+            <span class="status-dot" aria-hidden="true"></span>
+            Available for work
+        </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       HERO SECTION
+       ══════════════════════════════════════════════════════════════ -->
+    <section class="hero" role="main">
+
+        <!-- ─── Name Container (Central Element) ─── -->
+        <div class="name-container" id="nameContainer" role="button" tabindex="0"
+            aria-label="Hover or click to explore Manav Dadwal's professional profile">
+
+            <p class="name-subtitle" id="nameSubtitle">Hello, I'm</p>
+
+            <div class="name-title">
+                <span class="name-line" id="firstName">Manav</span>
+                <span class="name-line" id="lastName">Dadwal</span>
+            </div>
+
+            <p class="name-role" id="nameRole"> Developer &amp; Creative Technologist</p>
+
+            <div class="name-cta" id="nameCta">
+                <span class="hover-hint">
+                    <span class="hover-hint__icon" aria-hidden="true">✦</span>
+                    <span class="hover-hint__text">Hover to explore</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- ─── Info Container (Expanded Professional Info) ─── -->
+        <div class="info-container" id="infoContainer" aria-live="polite">
+
+            <!-- Technical Skills (Wide Card) -->
+            <div class="info-card info-card--wide" data-category="skills">
+                <div class="info-card__glow"></div>
+                <div class="info-card__header">
+                    <div class="info-card__icon">⬡</div>
+                    <h3 class="info-card__title">Technical Skills</h3>
+                </div>
+                <div class="info-card__skills">
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">TypeScript</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Next.js</span>
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">GSAP</span>
+                    <span class="skill-tag">MongoDB</span>
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">Azure</span>
+                    <span class="skill-tag">Git</span>
+                    <span class="skill-tag">Figma</span>
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="info-card" data-category="experience">
+                <div class="info-card__glow"></div>
+                <div class="info-card__header">
+                    <div class="info-card__icon">⏣</div>
+                    <h3 class="info-card__title">Experience</h3>
+                </div>
+                <ul class="info-card__list">
+                    <li><strong>Software Engineer</strong> @ TechCorp <span class="dim">2024 – Present</span></li>
+                    <li><strong>Frontend Developer Intern</strong> @ StartupXYZ <span class="dim">2023 – 2024</span>
+                    </li>
+                    <li><strong>Freelance Web Developer</strong> <span class="dim">2022 – 2023</span></li>
+                </ul>
+            </div>
+
+            <!-- Education -->
+            <div class="info-card" data-category="education">
+                <div class="info-card__glow"></div>
+                <div class="info-card__header">
+                    <div class="info-card__icon">⏣</div>
+                    <h3 class="info-card__title">Education</h3>
+                </div>
+                <ul class="info-card__list">
+                    <li><strong>B.Tech in Computer Science</strong> <span class="dim">2021 – 2025</span></li>
+                    <li>Coursework — Data Structures, Algorithms, Web Systems, AI/ML</li>
+                    <li>CGPA: <strong>8.7 / 10</strong></li>
+                </ul>
+            </div>
+
+            <!-- Achievements -->
+            <div class="info-card" data-category="achievements">
+                <div class="info-card__glow"></div>
+                <div class="info-card__header">
+                    <div class="info-card__icon">⏣</div>
+                    <h3 class="info-card__title">Achievements</h3>
+                </div>
+                <ul class="info-card__list">
+                    <li><strong>1st Place</strong> — National Hackathon 2024</li>
+                    <li><strong>Open Source Contributor</strong> — 500+ GitHub contributions</li>
+                    <li><strong>Dean's List</strong> — Academic Excellence (3 semesters)</li>
+                </ul>
+            </div>
+
+            <!-- Projects -->
+            <div class="info-card" data-category="projects">
+                <div class="info-card__glow"></div>
+                <div class="info-card__header">
+                    <div class="info-card__icon">⏣</div>
+                    <h3 class="info-card__title">Projects</h3>
+                </div>
+                <ul class="info-card__list">
+                    <li><strong>AI Dashboard</strong> — Real-time analytics with ML-powered predictions</li>
+                    <li><strong>CodeCollab</strong> — Collaborative code editor with live WebSockets</li>
+                    <li><strong>PortfolioOS</strong> — Desktop-style interactive portfolio experience</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- ─── Back Hint (visible when expanded) ─── -->
+        <div class="back-hint" id="backHint">
+            <span class="hover-hint">
+                <span class="hover-hint__icon" aria-hidden="true">↩</span>
+                <span class="hover-hint__text">Click anywhere to go back</span>
+            </span>
+        </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       SCRIPTS — GSAP first, then app logic
+       ══════════════════════════════════════════════════════════════ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

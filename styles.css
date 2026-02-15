@@ -1,0 +1,614 @@
+/* ===================================================================
+   MANAV DADWAL — Portfolio Hero Section
+   Modern, Futuristic, Minimal Design System
+   =================================================================== */
+
+/* --- CSS Custom Properties --- */
+:root {
+  --bg-primary: #050508;
+  --bg-secondary: #0a0a10;
+  --text-primary: #f0f0f5;
+  --text-secondary: #8888aa;
+  --text-dim: #555570;
+  --accent-primary: #6c63ff;
+  --accent-secondary: #00d4ff;
+  --accent-glow: rgba(108, 99, 255, 0.3);
+  --accent-glow-2: rgba(0, 212, 255, 0.2);
+  --card-bg: rgba(15, 15, 25, 0.7);
+  --card-border: rgba(108, 99, 255, 0.15);
+  --card-border-hover: rgba(108, 99, 255, 0.4);
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  cursor: default;
+}
+
+/* --- Background Canvas --- */
+#particleCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* --- Grid Overlay --- */
+.grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(108, 99, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108, 99, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+}
+
+/* --- Floating Orbs --- */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+.orb--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: orbFloat1 20s ease-in-out infinite;
+}
+
+.orb--2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--accent-glow-2), transparent 70%);
+  bottom: -15%;
+  right: -10%;
+  animation: orbFloat2 25s ease-in-out infinite;
+}
+
+.orb--3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 100, 200, 0.1), transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbFloat3 18s ease-in-out infinite;
+}
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(80px, 40px) scale(1.1); }
+  66% { transform: translate(-30px, 80px) scale(0.95); }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-60px, -40px) scale(1.05); }
+  66% { transform: translate(40px, -60px) scale(0.9); }
+}
+
+@keyframes orbFloat3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* --- Hero Layout --- */
+.hero {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* --- Top Bar --- */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2.5rem;
+  pointer-events: none;
+}
+
+.topbar__logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.topbar__status {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00e676;
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(0, 230, 118, 0.6); }
+  50% { opacity: 0.5; box-shadow: 0 0 16px rgba(0, 230, 118, 0.3); }
+}
+
+/* ===================================================================
+   NAME CONTAINER — Central Element
+   =================================================================== */
+.name-container {
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+  transition: opacity 0.6s var(--ease-out-expo);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.name-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.name-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
+  line-height: 1;
+}
+
+.name-line {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.5rem, 12vw, 10rem);
+  letter-spacing: -0.03em;
+  display: inline-block;
+  background: linear-gradient(
+    135deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 40%,
+    var(--accent-primary) 60%,
+    var(--accent-secondary) 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 8s ease infinite;
+  position: relative;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Individual letter spans (injected by JS) */
+.name-letter {
+  display: inline-block;
+  position: relative;
+  will-change: transform, opacity, text-shadow;
+  cursor: pointer;
+  transition: text-shadow 0.4s ease, filter 0.4s ease;
+  text-shadow: 0 0 0 transparent;
+}
+
+/* Floating glow on each letter */
+.name-letter:hover {
+  text-shadow:
+    0 0 20px rgba(108, 99, 255, 0.6),
+    0 0 40px rgba(108, 99, 255, 0.3),
+    0 0 80px rgba(0, 212, 255, 0.15);
+}
+
+.name-role {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin-top: 1.5rem;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* --- Hover Hint --- */
+.name-cta {
+  margin-top: 2.5rem;
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.hover-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 0.6rem 1.2rem;
+  border: 1px solid rgba(108, 99, 255, 0.15);
+  border-radius: 100px;
+  animation: hintPulse 3s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.hover-hint__icon {
+  color: var(--accent-primary);
+  font-size: 0.6rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { border-color: rgba(108, 99, 255, 0.15); }
+  50% { border-color: rgba(108, 99, 255, 0.35); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* ===================================================================
+   INFO CONTAINER — Expanded Professional Info
+   =================================================================== */
+.info-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.info-container.active {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- Info Cards --- */
+.info-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.6rem 1.8rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.info-card:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: 0 0 30px rgba(108, 99, 255, 0.08), inset 0 0 30px rgba(108, 99, 255, 0.03);
+}
+
+.info-card--wide {
+  grid-column: 1 / -1;
+}
+
+.info-card__glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(108, 99, 255, 0.06),
+    transparent 60%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.info-card:hover .info-card__glow {
+  opacity: 1;
+}
+
+.info-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.info-card__icon {
+  color: var(--accent-primary);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(108, 99, 255, 0.1);
+  border: 1px solid rgba(108, 99, 255, 0.2);
+}
+
+.info-card__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+.info-card__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.info-card__list li {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.info-card__list li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.info-card__list li strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.dim {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  margin-left: 0.3rem;
+}
+
+/* --- Skills Tags --- */
+.info-card__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--accent-secondary);
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  padding: 0.35rem 0.8rem;
+  border-radius: 100px;
+  letter-spacing: 0.03em;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.skill-tag:hover {
+  background: rgba(0, 212, 255, 0.12);
+  border-color: rgba(0, 212, 255, 0.4);
+  color: var(--text-primary);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* --- Back Hint --- */
+.back-hint {
+  position: fixed;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.back-hint.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===================================================================
+   LETTER PARTICLES (spawned by JS)
+   =================================================================== */
+.particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  pointer-events: none;
+  z-index: 50;
+  will-change: transform, opacity;
+}
+
+.particle--cyan {
+  background: var(--accent-secondary);
+}
+
+.particle--white {
+  background: var(--text-primary);
+}
+
+/* ===================================================================
+   RESPONSIVE DESIGN
+   =================================================================== */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 1rem 1.5rem;
+  }
+
+  .info-container {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    width: 92%;
+    max-height: 75vh;
+    overflow-y: auto;
+    padding: 0.5rem;
+    top: 52%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-primary) transparent;
+  }
+
+  .info-container::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .info-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .info-container::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 4px;
+  }
+
+  .info-card {
+    padding: 1.2rem 1.3rem;
+  }
+
+  .info-card--wide {
+    grid-column: 1;
+  }
+
+  .name-line {
+    font-size: clamp(3rem, 14vw, 6rem);
+  }
+
+  .hover-hint__text {
+    font-size: 0.6rem;
+  }
+
+  .back-hint {
+    bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .name-line {
+    font-size: clamp(2.5rem, 16vw, 4.5rem);
+  }
+
+  .info-card {
+    padding: 1rem 1.1rem;
+    border-radius: 12px;
+  }
+
+  .info-card__list li {
+    font-size: 0.75rem;
+  }
+
+  .skill-tag {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+/* --- Utility: smooth scroll for mobile info cards --- */
+@media (hover: none) {
+  .hover-hint__text::after {
+    content: ' (tap)';
+  }
+}
+
+/* --- Selection Color --- */
+::selection {
+  background: rgba(108, 99, 255, 0.3);
+  color: var(--text-primary);
+}
