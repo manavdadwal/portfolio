@@ -122,14 +122,14 @@
   // ================================================================
   function bindEvents() {
     // Detect touch device on first touch
-    document.addEventListener('touchstart', () => { isTouchDevice = true }, { passive: true })
+    // document.addEventListener('touchstart', () => { isTouchDevice = true }, { passive: true })
 
     // Desktop: hover on name (disabled on touch devices)
-    nameContainer.addEventListener('mouseenter', () => {
-      if (!isTouchDevice) handleExpand()
-    })
+    // nameContainer.addEventListener('mouseenter', () => {
+    //   if (!isTouchDevice) handleExpand()
+    // })
 
-    // Click on name — desktop fallback + mobile
+    // Click on name — desktop fallback + mobile 
     nameContainer.addEventListener('click', (e) => {
       e.stopPropagation()
       handleExpand()
@@ -562,6 +562,20 @@
 
     cards.forEach((card) => {
       card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect()
+        const x = ((e.clientX - rect.left) / rect.width) * 100
+        const y = ((e.clientY - rect.top) / rect.height) * 100
+        card.style.setProperty('--mouse-x', x + '%')
+        card.style.setProperty('--mouse-y', y + '%')
+      })
+    })
+  }
+
+  function setupCardGlowMouseEnter() {
+    const cards = document.querySelectorAll('.name-line')
+
+    cards.forEach((card) => {
+      card.addEventListener('mouseenter', (e) => {
         const rect = card.getBoundingClientRect()
         const x = ((e.clientX - rect.left) / rect.width) * 100
         const y = ((e.clientY - rect.top) / rect.height) * 100
