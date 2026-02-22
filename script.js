@@ -27,6 +27,7 @@
   const nameCta = document.getElementById('nameCta')
   const canvas = document.getElementById('particleCanvas')
   const ctx = canvas.getContext('2d')
+  const dateTimeContainer = document.getElementById('date-time-val')
 
   // ── Initialization ───────────────────────────────────────────────
   function init() {
@@ -36,6 +37,7 @@
     bindEvents()
     animateCanvasParticles()
     setupCardGlow()
+    startDateTimeUpdate()
   }
 
   // ================================================================
@@ -583,5 +585,30 @@
         card.style.setProperty('--mouse-y', y + '%')
       })
     })
+  }
+
+  // ================================================================
+  //  DATE TIME DISPLAY — Update current date and time
+  // ================================================================
+  function updateDateTime() {
+    const now = new Date()
+    const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }
+    const dateTimeString = now.toLocaleDateString('en-US', options)
+    if (dateTimeContainer) {
+      dateTimeContainer.textContent = dateTimeString
+    }
+  }
+
+  function startDateTimeUpdate() {
+    updateDateTime() // Initial update
+    setInterval(updateDateTime, 1000) // Update every second
   }
 })()

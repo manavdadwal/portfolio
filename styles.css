@@ -198,6 +198,22 @@ body {
   50% { opacity: 0.5; box-shadow: 0 0 16px rgba(0, 230, 118, 0.3); }
 }
 
+.date-time {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+
+.date-time-style {
+  transition: color 0.3s ease;
+}
+
 /* ===================================================================
    NAME CONTAINER — Central Element
    =================================================================== */
@@ -663,6 +679,23 @@ body {
 }
 
 @media (max-width: 480px) {
+  .topbar {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .topbar__logo {
+    font-size: 1rem;
+  }
+
+  .date-time {
+    font-size: 0.65rem;
+    order: 2;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
+
   .name-line {
     font-size: clamp(2.5rem, 16vw, 4.5rem);
   }
