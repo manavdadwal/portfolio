@@ -24,6 +24,25 @@
 <body>
 
     <!-- ══════════════════════════════════════════════════════════════
+       ENTRY SCREEN — Cinematic quote gate (first visit per session)
+       ══════════════════════════════════════════════════════════════ -->
+    <div class="entry-screen" id="entryScreen" data-interactive-ui role="dialog" aria-label="Entry">
+        <div class="entry-screen__bg" aria-hidden="true"></div>
+        <div class="entry-screen__inner">
+            <p class="entry-screen__kicker">Manav Dadwal · Portfolio</p>
+            <h1 class="entry-screen__quote">
+                <span class="entry-screen__quote-text" id="entryQuoteText"></span><span class="entry-screen__caret" aria-hidden="true"></span>
+            </h1>
+            <p class="entry-screen__attribution">— a thought to begin with</p>
+            <button type="button" class="entry-screen__enter" id="entryEnterBtn">
+                <span class="entry-screen__enter-label">Enter portfolio</span>
+                <span class="entry-screen__enter-arrow" aria-hidden="true">→</span>
+            </button>
+            <p class="entry-screen__hint">click anywhere · or press <kbd>Enter</kbd></p>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════
        BACKGROUND LAYERS
        ══════════════════════════════════════════════════════════════ -->
 
@@ -38,6 +57,20 @@
     <div class="orb orb--2" aria-hidden="true"></div>
     <div class="orb orb--3" aria-hidden="true"></div>
 
+    <!-- Subtle noise + scanline layers -->
+    <div class="noise-layer" aria-hidden="true"></div>
+    <div class="scanline-layer" aria-hidden="true"></div>
+
+    <!-- Cursor spotlight (mouse-following ambient glow) -->
+    <div class="cursor-spotlight" aria-hidden="true"></div>
+
+    <!-- Custom cursor (dot + lagging ring); hidden on touch -->
+    <div class="cursor-ring" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+
+    <!-- Boost-mode toast (Konami easter egg) -->
+    <div class="boost-toast" id="boostToast" role="status" aria-live="polite" hidden></div>
+
     <!-- ══════════════════════════════════════════════════════════════
        TOP BAR
        ══════════════════════════════════════════════════════════════ -->
@@ -46,11 +79,81 @@
         <div class="date-time">
             <span class="date-time-style" id="date-time-val"></span>
         </div>
-        <!-- <div class="topbar__status">
-            <span class="status-dot" aria-hidden="true"></span>
-            Available for work
-        </div> -->
+        <button type="button" class="topbar__cmdk" id="cmdkOpenBtn" data-interactive-ui
+            aria-haspopup="dialog" aria-controls="cmdkBackdrop" title="Open command palette">
+            <span class="topbar__cmdk-label">Search</span>
+            <kbd class="topbar__cmdk-keys"><span class="key-mod" id="cmdkModKey">Ctrl</span><span class="key-plus">+</span><span class="key-letter">K</span></kbd>
+        </button>
     </header>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       FLOATING INTERACTION DOCK — Say hi & assistant chat
+       ══════════════════════════════════════════════════════════════ -->
+    <div class="floating-dock" data-interactive-ui>
+        <button type="button" class="dock-btn dock-btn--hi" id="sayHiBtn" aria-haspopup="dialog"
+            aria-controls="sayHiModal">
+            <span class="dock-btn__emoji" aria-hidden="true">👋</span>
+            Say hi
+        </button>
+        <button type="button" class="dock-btn dock-btn--chat" id="chatToggleBtn" aria-expanded="false"
+            aria-controls="chatPanel">
+            <span class="dock-btn__emoji" aria-hidden="true">💬</span>
+            Chat
+        </button>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       SAY HI — Detailed greeting & contact
+       ══════════════════════════════════════════════════════════════ -->
+    <div class="sayhi-backdrop" id="sayHiBackdrop" data-interactive-ui hidden>
+        <div class="sayhi-modal" id="sayHiModal" role="dialog" aria-modal="true" aria-labelledby="sayHiTitle"
+            tabindex="-1">
+            <button type="button" class="sayhi-close" id="sayHiCloseBtn" aria-label="Close greeting">×</button>
+            <p class="sayhi-kicker" id="sayHiTitle">Hey there</p>
+            <h2 class="sayhi-headline">Thanks for stopping by.</h2>
+            <p class="sayhi-body">
+                I’m <strong>Manav</strong> — a full-stack developer who enjoys building thoughtful interfaces and
+                reliable systems. I like turning complex problems into calm, usable software, and I’m always curious
+                about where design, data, and AI meet.
+            </p>
+            <p class="sayhi-body">
+                If you’d like to collaborate, talk about a project, or just exchange ideas, I’d love to hear from you.
+                Use the quick actions below — or open <strong>Chat</strong> for a quick guided tour of this portfolio.
+            </p>
+            <ul class="sayhi-highlights">
+                <li><span aria-hidden="true">✦</span> Open to meaningful work &amp; creative tech</li>
+                <li><span aria-hidden="true">✦</span> Based in India · comfortable with remote</li>
+            </ul>
+            <div class="sayhi-actions">
+                <a class="sayhi-link sayhi-link--primary" href="mailto:manavdadwalwork@gmail.com">Email me</a>
+                <a class="sayhi-link" href="https://github.com/manavdadwal" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a class="sayhi-link" href="https://in.linkedin.com/in/manav-dadwal" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       PORTFOLIO ASSISTANT — Lightweight on-page chat
+       ══════════════════════════════════════════════════════════════ -->
+    <aside class="chat-panel" id="chatPanel" data-interactive-ui aria-hidden="true"
+        aria-label="Portfolio assistant chat">
+        <div class="chat-panel__header">
+            <span class="chat-panel__title">Portfolio assistant</span>
+            <button type="button" class="chat-panel__close" id="chatCloseBtn" aria-label="Close chat">×</button>
+        </div>
+        <div class="chat-panel__messages" id="chatMessages" role="log" aria-live="polite"></div>
+        <form class="chat-panel__form" id="chatForm" autocomplete="off">
+            <label for="chatInput" class="visually-hidden">Message</label>
+            <input type="text" id="chatInput" class="chat-panel__input"
+                placeholder="Ask about skills, hobbies, projects…" maxlength="500" />
+            <button type="submit" class="chat-panel__send">Send</button>
+        </form>
+        <div class="chat-panel__chips" id="chatChips">
+            <button type="button" class="chat-chip" data-prompt="What are your skills?">Skills</button>
+            <button type="button" class="chat-chip" data-prompt="Tell me about your hobbies">Hobbies</button>
+            <button type="button" class="chat-chip" data-prompt="What projects have you built?">Projects</button>
+        </div>
+    </aside>
 
     <!-- ══════════════════════════════════════════════════════════════
        HERO SECTION
@@ -70,6 +173,13 @@
 
             <p class="name-role" id="nameRole"> Developer &amp; Creative Technologist</p>
 
+            <p class="now-line" id="nowLine" data-interactive-ui aria-live="polite">
+                <span class="now-line__prefix" aria-hidden="true">›</span>
+                <span class="now-line__label">now</span>
+                <span class="now-line__text" id="nowLineText"></span>
+                <span class="now-line__caret" aria-hidden="true"></span>
+            </p>
+
             <div class="name-cta" id="nameCta">
                 <span class="hover-hint">
                     <span class="hover-hint__icon" aria-hidden="true">✦</span>
@@ -78,95 +188,301 @@
             </div>
         </div>
 
-        <!-- ─── Info Container (Expanded Professional Info) ─── -->
+        <!-- ─── Info Container — Floating tabs + single panel ─── -->
         <div class="info-container" id="infoContainer" aria-live="polite">
 
-            <!-- Technical Skills (Wide Card) -->
-            <div class="info-card info-card--wide" data-category="skills">
-                <div class="info-card__glow"></div>
-                <div class="info-card__header">
-                    <div class="info-card__icon">⬡</div>
-                    <h3 class="info-card__title">Technical Skills</h3>
-                </div>
-                <div class="info-card__skills">
-                    <span class="skill-tag">JavaScript</span>
-                    <span class="skill-tag">TypeScript</span>
-                    <span class="skill-tag">Angular</span>
-                    <span class="skill-tag">Next.js</span>
-                    <span class="skill-tag">Node.js</span>
-                    <span class="skill-tag">SQL</span>
-                    <span class="skill-tag">AI</span>
-                    <span class="skill-tag">GPT</span>
-                    <span class="skill-tag">Cursor</span>
-                    <span class="skill-tag">Azure</span>
-                    <span class="skill-tag">Git</span>
-                    <span class="skill-tag">Figma</span>
-                    <span class="skill-tag">CSS/SCSS</span>
-                </div>
-            </div>
+            <nav class="floating-tabs" data-interactive-ui role="tablist" aria-label="Portfolio sections">
+                <button type="button" role="tab" id="tab-skills" class="floating-tab is-active" data-tab="skills"
+                    aria-selected="true" aria-controls="panel-skills">
+                    <span class="floating-tab__glyph" aria-hidden="true">✦</span>
+                    <span class="floating-tab__label-text">Skills</span>
+                </button>
+                <button type="button" role="tab" id="tab-experience" class="floating-tab" data-tab="experience"
+                    aria-selected="false" aria-controls="panel-experience">
+                    <span class="floating-tab__glyph" aria-hidden="true">◇</span>
+                    <span class="floating-tab__label-text">Experience</span>
+                </button>
+                <button type="button" role="tab" id="tab-projects" class="floating-tab" data-tab="projects"
+                    aria-selected="false" aria-controls="panel-projects">
+                    <span class="floating-tab__glyph" aria-hidden="true">◇</span>
+                    <span class="floating-tab__label-text">Projects</span>
+                </button>
+                <button type="button" role="tab" id="tab-hobbies" class="floating-tab" data-tab="hobbies"
+                    aria-selected="false" aria-controls="panel-hobbies">
+                    <span class="floating-tab__glyph" aria-hidden="true">◇</span>
+                    <span class="floating-tab__label-text">Hobbies</span>
+                </button>
+                <button type="button" role="tab" id="tab-education" class="floating-tab" data-tab="education"
+                    aria-selected="false" aria-controls="panel-education">
+                    <span class="floating-tab__glyph" aria-hidden="true">◇</span>
+                    <span class="floating-tab__label-text">Education</span>
+                </button>
+                <button type="button" role="tab" id="tab-achievements" class="floating-tab" data-tab="achievements"
+                    aria-selected="false" aria-controls="panel-achievements">
+                    <span class="floating-tab__glyph" aria-hidden="true">◇</span>
+                    <span class="floating-tab__label-text">Achievements</span>
+                </button>
+            </nav>
 
-            <!-- Experience -->
-            <div class="info-card" data-category="experience">
-                <div class="info-card__glow"></div>
-                <div class="info-card__header">
-                    <div class="info-card__icon">⏣</div>
-                    <h3 class="info-card__title">Experience</h3>
+            <div class="tab-panels">
+                <!-- Skills -->
+                <div id="panel-skills" role="tabpanel" class="tab-panel is-active" data-tab-panel="skills"
+                    aria-labelledby="tab-skills">
+                    <div class="info-card info-card--panel">
+                        <div class="info-card__glow"></div>
+                        <div class="card-decor card-decor--skills" aria-hidden="true">
+                            <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g stroke="currentColor" stroke-width="1" fill="none">
+                                    <polygon points="30,20 50,8 70,20 70,42 50,54 30,42"/>
+                                    <polygon points="80,46 100,34 120,46 120,68 100,80 80,68"/>
+                                    <polygon points="130,20 150,8 170,20 170,42 150,54 130,42"/>
+                                    <polygon points="180,46 200,34 220,46 220,68 200,80 180,68"/>
+                                    <polygon points="30,72 50,60 70,72 70,94 50,106 30,94"/>
+                                    <polygon points="130,72 150,60 170,72 170,94 150,106 130,94"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="info-card__header">
+                            <div class="info-card__icon">⬡</div>
+                            <h3 class="info-card__title">
+                                <span class="info-card__index">01</span>
+                                <span class="info-card__title-text">Technical Skills</span>
+                            </h3>
+                        </div>
+                        <div class="info-card__skills">
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">TypeScript</span>
+                            <span class="skill-tag">Angular</span>
+                            <span class="skill-tag">Next.js</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">SQL</span>
+                            <span class="skill-tag">AI</span>
+                            <span class="skill-tag">GPT</span>
+                            <span class="skill-tag">Cursor</span>
+                            <span class="skill-tag">Azure</span>
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">Figma</span>
+                            <span class="skill-tag">CSS/SCSS</span>
+                        </div>
+                    </div>
                 </div>
-                <ul class="info-card__list">
-                    <li><strong>Software Engineer</strong> @ Reliance Industries Limited <span class="dim">Dec 2022 –
-                            Present</span></li>
-                    <li><strong>Project Trainee Engineer</strong> @ Schneider Electric <span class="dim">Aug 2021 – Oct
-                            2021</span>
-                    </li>
-                    <li><strong>Trainee Engineer</strong> @ Pravin Electricals Pvt. Ltd.<span class="dim">Jun 2021 – Jul
-                            2021</span></li>
-                </ul>
-            </div>
 
-            <!-- Projects -->
-            <div class="info-card" data-category="projects">
-                <div class="info-card__glow"></div>
-                <div class="info-card__header">
-                    <div class="info-card__icon">⏣</div>
-                    <h3 class="info-card__title">Projects</h3>
+                <!-- Experience -->
+                <div id="panel-experience" role="tabpanel" class="tab-panel" data-tab-panel="experience" hidden
+                    aria-labelledby="tab-experience">
+                    <div class="info-card info-card--panel">
+                        <div class="info-card__glow"></div>
+                        <div class="card-decor card-decor--experience" aria-hidden="true">
+                            <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g stroke="currentColor" stroke-width="1" fill="none">
+                                    <line x1="20" y1="10" x2="20" y2="150" stroke-dasharray="2 5"/>
+                                    <circle cx="20" cy="28" r="5"/>
+                                    <circle cx="20" cy="74" r="4" opacity="0.7"/>
+                                    <circle cx="20" cy="120" r="3.5" opacity="0.5"/>
+                                    <line x1="28" y1="28" x2="170" y2="28" stroke-dasharray="1 4" opacity="0.6"/>
+                                    <line x1="28" y1="74" x2="150" y2="74" stroke-dasharray="1 4" opacity="0.45"/>
+                                    <line x1="28" y1="120" x2="120" y2="120" stroke-dasharray="1 4" opacity="0.35"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="info-card__header">
+                            <div class="info-card__icon">⏣</div>
+                            <h3 class="info-card__title">
+                                <span class="info-card__index">02</span>
+                                <span class="info-card__title-text">Experience</span>
+                            </h3>
+                        </div>
+                        <ul class="info-card__list">
+                            <li><strong>Software Engineer</strong> @ Reliance Industries Limited <span class="dim">Dec 2022 –
+                                    Present</span></li>
+                            <li><strong>Project Trainee Engineer</strong> @ Schneider Electric <span class="dim">Aug 2021 – Oct
+                                    2021</span></li>
+                            <li><strong>Trainee Engineer</strong> @ Pravin Electricals Pvt. Ltd.<span class="dim">Jun 2021 – Jul
+                                    2021</span></li>
+                        </ul>
+                    </div>
                 </div>
-                <ul class="info-card__list">
-                    <li><strong>Vessel Reporting & Performance Management System</strong> — Led the design and
-                        development of scalable Micro Frontend applications using Angular, TypeScript, and Node.js</li>
-                    <li><strong>VocabMaster</strong> — Built a vocabulary learning website focused on important words
-                        that improve language and communication skills. <a target="_blank"
-                            href="https://manavdadwal.github.io/Vocabs/"><span style="color:cornflowerblue">(Open
-                                site)</span></a>
-                    </li>
-                </ul>
-            </div>
 
-            <!-- Education -->
-            <div class="info-card" data-category="education">
-                <div class="info-card__glow"></div>
-                <div class="info-card__header">
-                    <div class="info-card__icon">⏣</div>
-                    <h3 class="info-card__title">Education</h3>
+                <!-- Projects -->
+                <div id="panel-projects" role="tabpanel" class="tab-panel" data-tab-panel="projects" hidden
+                    aria-labelledby="tab-projects">
+                    <div class="info-card info-card--panel">
+                        <div class="info-card__glow"></div>
+                        <div class="card-decor card-decor--projects" aria-hidden="true">
+                            <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g stroke="currentColor" stroke-width="1" fill="none">
+                                    <rect x="30" y="22" width="120" height="80" rx="8" opacity="0.45"/>
+                                    <rect x="46" y="36" width="120" height="80" rx="8" opacity="0.7"/>
+                                    <rect x="62" y="50" width="120" height="80" rx="8"/>
+                                    <line x1="74" y1="68" x2="158" y2="68" stroke-dasharray="2 4" opacity="0.7"/>
+                                    <line x1="74" y1="84" x2="142" y2="84" stroke-dasharray="2 4" opacity="0.5"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="info-card__header">
+                            <div class="info-card__icon">⏣</div>
+                            <h3 class="info-card__title">
+                                <span class="info-card__index">03</span>
+                                <span class="info-card__title-text">Projects</span>
+                            </h3>
+                        </div>
+                        <ul class="info-card__list">
+                            <li><strong>Vessel Reporting & Performance Management System</strong> — Led the design and
+                                development of scalable Micro Frontend applications using Angular, TypeScript, and Node.js</li>
+                            <li><strong>VocabMaster</strong> — Built a vocabulary learning website focused on important words
+                                that improve language and communication skills. <a target="_blank"
+                                    href="https://manavdadwal.github.io/Vocabs/"><span style="color:cornflowerblue">(Open
+                                        site)</span></a></li>
+                        </ul>
+                    </div>
                 </div>
-                <ul class="info-card__list">
-                    <li><strong>B.E in Electronics </strong> <span class="dim">2018 – 2022</span></li>
-                    <!-- <li>Coursework — Data Structures, Algorithms, Web Systems, AI/ML</li> -->
-                    <li>CGPA: <strong>8.52 / 10</strong></li>
-                </ul>
-            </div>
 
-            <!-- Achievements -->
-            <div class="info-card" data-category="achievements">
-                <div class="info-card__glow"></div>
-                <div class="info-card__header">
-                    <div class="info-card__icon">⏣</div>
-                    <h3 class="info-card__title">Achievements</h3>
+                <!-- Hobbies -->
+                <div id="panel-hobbies" role="tabpanel" class="tab-panel" data-tab-panel="hobbies" hidden
+                    aria-labelledby="tab-hobbies">
+                    <div class="info-card info-card--panel info-card--hobbies">
+                        <div class="info-card__glow"></div>
+                        <div class="card-decor card-decor--hobbies" aria-hidden="true">
+                            <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g stroke="currentColor" stroke-width="1" fill="none">
+                                    <path d="M0 50 Q 30 30, 60 50 T 120 50 T 180 50 T 240 50" opacity="0.65"/>
+                                    <path d="M0 80 Q 30 60, 60 80 T 120 80 T 180 80 T 240 80" opacity="0.45"/>
+                                    <path d="M0 110 Q 30 90, 60 110 T 120 110 T 180 110 T 240 110" opacity="0.3"/>
+                                    <circle cx="40" cy="50" r="2.5"/>
+                                    <circle cx="100" cy="80" r="2"/>
+                                    <circle cx="160" cy="50" r="2"/>
+                                    <circle cx="200" cy="110" r="2.5"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="info-card__header">
+                            <div class="info-card__icon">◇</div>
+                            <h3 class="info-card__title">
+                                <span class="info-card__index">04</span>
+                                <span class="info-card__title-text">Hobbies &amp; interests</span>
+                            </h3>
+                        </div>
+                        <p class="info-card__lead">Outside of code — energy, creativity, and people.</p>
+                        <div class="hobby-grid">
+                            <button type="button" class="hobby-tile" data-hobby="singing">
+                                <span class="hobby-tile__icon hobby-tile__icon--svg" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M12 15a4 4 0 004-4V7a4 4 0 00-8 0v4a4 4 0 004 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                                        <path d="M19 11a7 7 0 01-14 0M12 18v3M9 21h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                </span>
+                                <span class="hobby-tile__name">Singing</span>
+                                <span class="hobby-tile__hint">tap</span>
+                            </button>
+                            <button type="button" class="hobby-tile" data-hobby="football">
+                                <span class="hobby-tile__icon hobby-tile__icon--svg" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M12 7l4 2.3v4.6L12 16l-4-2.3V9.3L12 7z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" fill="none"/>
+                                    </svg>
+                                </span>
+                                <span class="hobby-tile__name">Football</span>
+                                <span class="hobby-tile__hint">tap</span>
+                            </button>
+                            <button type="button" class="hobby-tile" data-hobby="sketching">
+                                <span class="hobby-tile__icon hobby-tile__icon--svg" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M4 20l2-1 10-10-4-4L3 15l-1 4h2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                                        <path d="M13 6l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M6 17l3-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+                                    </svg>
+                                </span>
+                                <span class="hobby-tile__name">Sketching</span>
+                                <span class="hobby-tile__hint">tap</span>
+                            </button>
+                            <button type="button" class="hobby-tile" data-hobby="lead">
+                                <span class="hobby-tile__icon hobby-tile__icon--svg" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path d="M4 18h5v-7H4v7zm6 0h5V9h-5v9zm6 0h5v-5h-5v5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                                        <path d="M6.5 11h1M12.5 7h1M18.5 13h1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+                                    </svg>
+                                </span>
+                                <span class="hobby-tile__name">Lead the group</span>
+                                <span class="hobby-tile__hint">tap</span>
+                            </button>
+                        </div>
+                        <p class="hobby-detail" id="hobbyDetail" aria-live="polite">
+                            Tap a tile for a short note — singing, pitch drills with friends; football for discipline and teamwork;
+                            sketching to observe and unwind; stepping up to lead when the group needs direction.
+                        </p>
+                    </div>
                 </div>
-                <ul class="info-card__list">
-                    <li><strong>Annual R&M Achievers</strong> — 'A Team' award - 2024-25</li>
-                    <li><strong>2nd Place</strong> — Intra-college football tournament - 2022</li>
-                    <li><strong>2nd Place</strong> — Science Project Competition - 2017</li>
-                </ul>
+
+                <!-- Education -->
+                <div id="panel-education" role="tabpanel" class="tab-panel" data-tab-panel="education" hidden
+                    aria-labelledby="tab-education">
+                    <div class="info-card info-card--panel">
+                        <div class="info-card__glow"></div>
+                        <div class="card-decor card-decor--education" aria-hidden="true">
+                            <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g stroke="currentColor" stroke-width="1" fill="none">
+                                    <path d="M30 40 C 60 28, 100 28, 110 40 L 110 120 C 100 108, 60 108, 30 120 Z" opacity="0.7"/>
+                                    <path d="M190 40 C 160 28, 120 28, 110 40 L 110 120 C 120 108, 160 108, 190 120 Z" opacity="0.7"/>
+                                    <line x1="110" y1="40" x2="110" y2="120" opacity="0.6"/>
+                                    <line x1="46" y1="56" x2="96" y2="56" stroke-dasharray="2 3" opacity="0.5"/>
+                                    <line x1="46" y1="70" x2="92" y2="70" stroke-dasharray="2 3" opacity="0.4"/>
+                                    <line x1="46" y1="84" x2="88" y2="84" stroke-dasharray="2 3" opacity="0.3"/>
+                                    <line x1="124" y1="56" x2="174" y2="56" stroke-dasharray="2 3" opacity="0.5"/>
+                                    <line x1="124" y1="70" x2="170" y2="70" stroke-dasharray="2 3" opacity="0.4"/>
+                                    <line x1="124" y1="84" x2="166" y2="84" stroke-dasharray="2 3" opacity="0.3"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="info-card__header">
+                            <div class="info-card__icon">⏣</div>
+                            <h3 class="info-card__title">
+                                <span class="info-card__index">05</span>
+                                <span class="info-card__title-text">Education</span>
+                            </h3>
+                        </div>
+                        <ul class="info-card__list">
+                            <li><strong>B.E in Electronics </strong> <span class="dim">2018 – 2022</span></li>
+                            <li>CGPA: <strong>8.52 / 10</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div id="panel-achievements" role="tabpanel" class="tab-panel" data-tab-panel="achievements" hidden
+                    aria-labelledby="tab-achievements">
+                    <div class="info-card info-card--panel">
+                        <div class="info-card__glow"></div>
+                        <div class="card-decor card-decor--achievements" aria-hidden="true">
+                            <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g stroke="currentColor" stroke-width="1" fill="none">
+                                    <circle cx="110" cy="80" r="34"/>
+                                    <circle cx="110" cy="80" r="22" opacity="0.6"/>
+                                    <polygon points="110,52 116,72 138,72 120,84 126,104 110,92 94,104 100,84 82,72 104,72" opacity="0.85"/>
+                                    <line x1="110" y1="36" x2="110" y2="14" stroke-dasharray="2 3"/>
+                                    <line x1="110" y1="124" x2="110" y2="146" stroke-dasharray="2 3"/>
+                                    <line x1="66" y1="80" x2="44" y2="80" stroke-dasharray="2 3"/>
+                                    <line x1="154" y1="80" x2="176" y2="80" stroke-dasharray="2 3"/>
+                                    <line x1="78" y1="48" x2="62" y2="32" stroke-dasharray="2 3" opacity="0.6"/>
+                                    <line x1="142" y1="48" x2="158" y2="32" stroke-dasharray="2 3" opacity="0.6"/>
+                                    <line x1="78" y1="112" x2="62" y2="128" stroke-dasharray="2 3" opacity="0.6"/>
+                                    <line x1="142" y1="112" x2="158" y2="128" stroke-dasharray="2 3" opacity="0.6"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="info-card__header">
+                            <div class="info-card__icon">⏣</div>
+                            <h3 class="info-card__title">
+                                <span class="info-card__index">06</span>
+                                <span class="info-card__title-text">Achievements</span>
+                            </h3>
+                        </div>
+                        <ul class="info-card__list">
+                            <li><strong>Annual R&M Achievers</strong> — 'A Team' award - 2024-25</li>
+                            <li><strong>2nd Place</strong> — Intra-college football tournament - 2022</li>
+                            <li><strong>2nd Place</strong> — Science Project Competition - 2017</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -180,6 +496,41 @@
         </div>
 
     </section>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       SECTION RAIL — Vertical progress + jump nav (visible when expanded)
+       ══════════════════════════════════════════════════════════════ -->
+    <nav class="section-rail" id="sectionRail" data-interactive-ui aria-label="Jump to section">
+        <ol class="section-rail__list" role="tablist">
+            <li><button type="button" class="rail-dot is-active" data-tab="skills" data-index="01" aria-label="01 Skills"><span class="rail-dot__num">01</span><span class="rail-dot__name">Skills</span></button></li>
+            <li><button type="button" class="rail-dot" data-tab="experience" data-index="02" aria-label="02 Experience"><span class="rail-dot__num">02</span><span class="rail-dot__name">Experience</span></button></li>
+            <li><button type="button" class="rail-dot" data-tab="projects" data-index="03" aria-label="03 Projects"><span class="rail-dot__num">03</span><span class="rail-dot__name">Projects</span></button></li>
+            <li><button type="button" class="rail-dot" data-tab="hobbies" data-index="04" aria-label="04 Hobbies"><span class="rail-dot__num">04</span><span class="rail-dot__name">Hobbies</span></button></li>
+            <li><button type="button" class="rail-dot" data-tab="education" data-index="05" aria-label="05 Education"><span class="rail-dot__num">05</span><span class="rail-dot__name">Education</span></button></li>
+            <li><button type="button" class="rail-dot" data-tab="achievements" data-index="06" aria-label="06 Achievements"><span class="rail-dot__num">06</span><span class="rail-dot__name">Achievements</span></button></li>
+        </ol>
+    </nav>
+
+    <!-- ══════════════════════════════════════════════════════════════
+       COMMAND PALETTE — ⌘K / Ctrl+K
+       ══════════════════════════════════════════════════════════════ -->
+    <div class="cmdk-backdrop" id="cmdkBackdrop" data-interactive-ui hidden>
+        <div class="cmdk-modal" id="cmdkModal" role="dialog" aria-modal="true" aria-label="Command palette">
+            <div class="cmdk-search">
+                <span class="cmdk-icon" aria-hidden="true">⌕</span>
+                <input type="text" id="cmdkInput" class="cmdk-input"
+                    placeholder="Type a command or search…  (try: hobbies, theme, resume, boost)"
+                    autocomplete="off" spellcheck="false" />
+                <kbd class="cmdk-esc" aria-hidden="true">ESC</kbd>
+            </div>
+            <ul class="cmdk-list" id="cmdkList" role="listbox"></ul>
+            <div class="cmdk-footer" aria-hidden="true">
+                <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+                <span><kbd>↵</kbd> select</span>
+                <span><kbd>esc</kbd> close</span>
+            </div>
+        </div>
+    </div>
 
     <!-- ══════════════════════════════════════════════════════════════
        SCRIPTS — GSAP first, then app logic
